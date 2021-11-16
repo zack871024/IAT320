@@ -1,0 +1,29 @@
+let item = 0
+let strip: light.NeoPixelStrip = null
+input.onLightConditionChanged(LightCondition.Dark, function () {
+    light.setBrightness(115)
+})
+input.onLightConditionChanged(LightCondition.Bright, function () {
+    light.setBrightness(0)
+})
+input.onTemperatureConditionChanged(TemperatureCondition.Cold, 19, TemperatureUnit.Celsius, function () {
+    item = 161
+    light.showRing(
+    `blue blue blue blue blue blue blue blue blue blue`
+    )
+})
+input.onTemperatureConditionChanged(TemperatureCondition.Hot, 20, TemperatureUnit.Celsius, function () {
+    item = 0
+    light.showRing(
+    `red red red red red red red red red red`
+    )
+})
+forever(function () {
+    strip = light.createStrip(pins.A2, 60)
+    strip.setPhotonMode(PhotonMode.PenDown)
+    for (let i = 0; i < 60; i++) {
+        strip.photonForward(1)
+        strip.setPhotonPenHue(item)
+    }
+    strip.setPhotonMode(PhotonMode.Eraser)
+})
